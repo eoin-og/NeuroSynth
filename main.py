@@ -1,25 +1,38 @@
+import argparse
 import gan
 
 
 if __name__ == "__main__":
 
+	parser = argparse.ArgumentParser(description='Training script for NeuroSynth GAN.')
+	parser.add_argument('--num_epoch', type=int, default=1000, metavar='N',
+						help='# of training epochs')
+	parser.add_argument('--dsize', type=int, default=2048, metavar='N',
+						help='# of training examples')
+	parser.add_argument('--batch-size', type=int, default=64, metavar='N',
+						help='training batch size')
+	parser.add_argument('--seq-length', type=int, default=128, metavar='N',
+						help='length of generated samples')
+	parser.add_argument('--conv-dim', type=int, default=8, metavar='N',
+						help='# of dimensions in first conv layer')
+	parser.add_argument('--print-interval', type=int, default=10, metavar='N',
+						help='After how many epochs should print results/save model')
+	parser.add_argument('--sustains', type=list, default=[1.0, 0.7, 0.4], metavar='N', 
+						help='sustain levels')
+	parser.add_argument('--attacks', type=list, default=[0.0, 0.2, 0.4], metavar='N', 
+						help='attack levels (amount of sample that should be rising)')
+	parser.add_argument('--decays', type=list, default=[0.0, 0.2, 0.4], metavar='N', 
+						help='decay levels (amount of sample that should be falling)')
+	args = parser.parse_args()
 
-	num_epoch = 10000
-	dsize = 2048
-	batch_size = 64
-	seq_length = 128
-	cf = 8
-	print_interval = 10
-
-	sustains = [1.0, 0.7, 0.4]
-	attacks = [1, seq_length*0.2, seq_length*0.4]
-	decays =  [1, seq_length*0.2, seq_length*0.4]
-	variables = [sustains, attacks, decays]
-
-	gan.train(num_epoch=num_epoch,
-			  dsize=dsize,
-			  batch_size=batch_size,
-			  print_interval=print_interval,
+	attacks = [int(a*args.seq_length) + 1 for a in args.attacks]
+	decays = [int(a*args.seq_length) + 1 for a in args.decays]
+	variables = [args.sustains, attacks, decays]
+	
+	gan.train(num_epoch=args.num_epoch,
+			  dsize=args.dsize,
+			  batch_size=args.batch_size,
+			  print_interval=args.print_interval,
 			  variables=variables,
-			  cf=cf,
-			  seq_length=seq_length)
+			  cf=args.conv_dim,
+			  seq_length=args.seq_length)

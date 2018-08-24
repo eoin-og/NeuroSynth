@@ -59,8 +59,10 @@ def create_dataset(seq_length=64, dataset_size=2048, batch_size=64, att=None, su
 		samples_list.append((np.vstack((sample, basic, np.arange(seq_length))), class_labels))
 		
 	samples, class_labels = list(zip(*samples_list))
+	
 	data_tensor = torch.FloatTensor(samples).view(dataset_size, 3, seq_length)
 	target_tensor = torch.LongTensor(class_labels)
 	oh_target_tensor = create_multi_onehot(target_tensor, [len(att), len(sus), len(dec)], dataset_size)
+	
 	dataset = torch.utils.data.TensorDataset(data_tensor, oh_target_tensor)
 	return torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)

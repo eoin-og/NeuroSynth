@@ -19,7 +19,6 @@ def train(num_epoch=500, dsize=2048, batch_size=64, seq_length=128, cf=8, print_
 	num_dim = sum(len(v) for v in variables)
 	sustains, attacks, decays = variables
 
-
 	G = models.Generator(num_dim, cf)
 	D = models.Discriminator(num_dim, seq_length, cf)
 
@@ -98,15 +97,14 @@ def train(num_epoch=500, dsize=2048, batch_size=64, seq_length=128, cf=8, print_
 			print('D real: ', d_real_src_pred.data.mean().numpy(), '--- class: ', d_real_cls_loss.data.numpy(), 
 					'--- gp: ', gp_loss.data.numpy())
 			print('G loss: ', g_src_pred.data.mean().numpy(), '--- class: ', g_cls_loss.data.numpy())
+			print('label: ', lab)
+			print('real pred : ', d_real_cls_pred[i].data.numpy())
+			print('fake pred : ', g_cls_pred[i].data.numpy())
 
 			i = np.random.randint(0, batch_size - 1)
 			gs = gen_sample[i, :].squeeze().data.numpy()
 			rs = real_sample[i, :].data.numpy()
 			lab = label[i].data.numpy()
-
-			print('label: ', lab)
-			print('real pred : ', d_real_cls_pred[i].data.numpy())
-			print('fake pred : ', g_cls_pred[i].data.numpy())
 			
 			plt.plot(gs, 'r')
 			plt.plot(rs, 'g')
@@ -114,9 +112,9 @@ def train(num_epoch=500, dsize=2048, batch_size=64, seq_length=128, cf=8, print_
 			plt.savefig('output_data/gen_sample_epoch_{}.png'.format(epoch))
 			plt.clf()
 
-			#filepath = 'models/gen/G_{}.pth.tar'.format(epoch)
-			#torch.save(G.state_dict(), filepath)
+			filepath = 'models/gen/G_{}.pth.tar'.format(epoch)
+			torch.save(G.state_dict(), filepath)
 
-			#filepath = 'models/disc/D_{}.pth.tar'.format(epoch)
-			#torch.save(D.state_dict(), filepath)
+			filepath = 'models/disc/D_{}.pth.tar'.format(epoch)
+			torch.save(D.state_dict(), filepath)
 
