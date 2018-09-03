@@ -14,7 +14,7 @@ Sine wave with attack: 40%, sustain: 0.4, release: 40%
 Squre wave with attack: 20%, sustain: 0.7, release: 0%
 ![square wave 110](https://github.com/eoin-og/NeuroSynth/blob/master/results/square110.png)
 
-Saw wave with attack: 0%, sustain: 1.0, release: 0% (no transformation)
+Sawtooth wave with attack: 0%, sustain: 1.0, release: 0% (no transformation)
 ![saw wave 000](https://github.com/eoin-og/NeuroSynth/blob/master/results/saw000.png)
 
 To test how well the network generalises I tired an input sample that was much noisier than anything it was trained on:
@@ -22,7 +22,11 @@ Noisey saw wave with attack: 40%, sustain: 0.4, release: 40%
 ![noisey sin 222](https://github.com/eoin-og/NeuroSynth/blob/master/results/noisey_sine.png)
 
 Finally I tried giving it a waveform it had never seen before, an inverted sawtooth. The results here are not perfect but I think pretty good condisering it was only trained on three different wave forms to begin with. We can see the rise and fall of the attack/sustain/release is pretty accurate and in most cases the general character of the wave is still preserved (sharp rise followed by a slow fall)
-Saw wave with attack: 0%, sustain: 1.0, release: 0% (no transformation)
-![saw wave 000](https://github.com/eoin-og/NeuroSynth/blob/master/results/saw000.png)
+Inverted sawtooth wave with attack: 40%, sustain: 0.4, release: 40%
+![inv saw wave 222](https://github.com/eoin-og/NeuroSynth/blob/master/results/invsaw222.png)
 
 ## Files
+* `main.py` - function that parses arguments, calls the trainer function.
+* `gan.py` - Trainer function for both networks.
+* `models.py` - Model class for generator and discriminator.
+* `utils.py` - A few helper functions.
