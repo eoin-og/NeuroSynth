@@ -5,7 +5,7 @@ import gan
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='Training script for NeuroSynth GAN.')
-	parser.add_argument('--num_epoch', type=int, default=1000, metavar='N',
+	parser.add_argument('--num_epoch', type=int, default=2000, metavar='N',
 						help='# of training epochs')
 	parser.add_argument('--dsize', type=int, default=2048, metavar='N',
 						help='# of training examples')

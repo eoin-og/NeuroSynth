@@ -93,25 +93,29 @@ def train(num_epoch=500, dsize=2048, batch_size=64, seq_length=128, cf=8, print_
 			
 		
 		if epoch % print_interval == 0:
+
+			i = np.random.randint(0, batch_size - 1)
+			gen_sample = gen_sample[i, :].squeeze().data.numpy()
+			real_sample = real_sample[i, :].data.numpy()
+			label = label[i].data.numpy()
+
+			# console update
 			print('\n----- ', epoch, '-----')
 			print('D real: ', d_real_src_pred.data.mean().numpy(), '--- class: ', d_real_cls_loss.data.numpy(), 
 					'--- gp: ', gp_loss.data.numpy())
 			print('G loss: ', g_src_pred.data.mean().numpy(), '--- class: ', g_cls_loss.data.numpy())
-			print('label: ', lab)
+			print('label: ', label)
 			print('real pred : ', d_real_cls_pred[i].data.numpy())
 			print('fake pred : ', g_cls_pred[i].data.numpy())
-
-			i = np.random.randint(0, batch_size - 1)
-			gs = gen_sample[i, :].squeeze().data.numpy()
-			rs = real_sample[i, :].data.numpy()
-			lab = label[i].data.numpy()
 			
-			plt.plot(gs, 'r')
-			plt.plot(rs, 'g')
-			plt.title('label: {}'.format(lab))
+			# output graphs
+			plt.plot(gen_sample, 'r')
+			plt.plot(real_sample, 'g')
+			plt.title('label: {}'.format(label))
 			plt.savefig('output_data/gen_sample_epoch_{}.png'.format(epoch))
 			plt.clf()
 
+			# save models
 			filepath = 'models/gen/G_{}.pth.tar'.format(epoch)
 			torch.save(G.state_dict(), filepath)
 

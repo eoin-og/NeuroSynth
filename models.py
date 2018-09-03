@@ -49,6 +49,7 @@ class Discriminator(nn.Module):
 
 		return src_output.view(src_output.size(0), src_output.size(1)), cls_output.view(cls_output.size(0), cls_output.size(1))
 
+
 class Generator(nn.Module):
 
 	def __init__(self, num_dim, conv_dim):
