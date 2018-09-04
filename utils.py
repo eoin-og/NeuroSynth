@@ -12,12 +12,6 @@ def gradient_penalty(x, y):
 					 grad_outputs=torch.ones(y.size()))[0]
 	return ((gradients.norm(2, dim=1) - 1)**2).mean()
 
-def apply_envelope(sample, a, d, s, r):
-	sample[:a] *= np.linspace(0, 1.0, a)
-	sample[a:a+d] *= np.linspace(1.0, s, d)
-	sample[a+d:-r] *= s
-	sample[-r:] *= np.linspace(s, 0.0, r)
-	return sample
 
 def create_multi_onehot(labels, dims, batch_size):
 	onehots = []
@@ -27,7 +21,8 @@ def create_multi_onehot(labels, dims, batch_size):
 		onehots.append(onehot)
 	return torch.cat(onehots, dim=1)
 
-def create_dataset(seq_length=64, dataset_size=2048, batch_size=64, att=None, sus=None, dec=None):
+
+def create_dataset(seq_length=64, dataset_size=2048, batch_size=64, att=None, sus=None, rel=None):
 	freq_hz = seq_length // 10
 	noise_factor = 0.05
 	wave_funcs = [np.sin, signal.sawtooth, signal.square]
@@ -47,14 +42,14 @@ def create_dataset(seq_length=64, dataset_size=2048, batch_size=64, att=None, su
 		s_class = np.random.choice(len(sus))
 		s = sus[s_class]
 
-		d_class = np.random.choice(len(dec))
-		d = int(dec[d_class])
+		r_class = np.random.choice(len(rel))
+		r = int(rel[r_class])
 
 		sample[:a] *= np.linspace(0, 1.0, a)
-		sample[a:-d] *= s
-		sample[-d:] *= np.linspace(s, 0.0, d)
+		sample[a:-r] *= s
+		sample[-r:] *= np.linspace(s, 0.0, r)
 
-		class_labels = [a_class, s_class, d_class]
+		class_labels = [a_class, s_class, r_class]
 		
 		samples_list.append((np.vstack((sample, basic, np.arange(seq_length))), class_labels))
 		
@@ -62,7 +57,7 @@ def create_dataset(seq_length=64, dataset_size=2048, batch_size=64, att=None, su
 	
 	data_tensor = torch.FloatTensor(samples).view(dataset_size, 3, seq_length)
 	target_tensor = torch.LongTensor(class_labels)
-	oh_target_tensor = create_multi_onehot(target_tensor, [len(att), len(sus), len(dec)], dataset_size)
+	oh_target_tensor = create_multi_onehot(target_tensor, [len(att), len(sus), len(rel)], dataset_size)
 	
 	dataset = torch.utils.data.TensorDataset(data_tensor, oh_target_tensor)
 	return torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)

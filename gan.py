@@ -17,7 +17,7 @@ np.set_printoptions(precision=3)
 def train(num_epoch=500, dsize=2048, batch_size=64, seq_length=128, cf=8, print_interval=10, variables=None):
 
 	num_dim = sum(len(v) for v in variables)
-	sustains, attacks, decays = variables
+	sustains, attacks, releases = variables
 
 	G = models.Generator(num_dim, cf)
 	D = models.Discriminator(num_dim, seq_length, cf)
@@ -27,7 +27,7 @@ def train(num_epoch=500, dsize=2048, batch_size=64, seq_length=128, cf=8, print_
 
 	loss_function = F.binary_cross_entropy_with_logits
 
-	dataloader = utils.create_dataset(seq_length, dsize, batch_size, sus=sustains, att=attacks, dec=decays)
+	dataloader = utils.create_dataset(seq_length, dsize, batch_size, sus=sustains, att=attacks, rel=releases)
 
 	for epoch in range(num_epoch):
 		for sample, label in dataloader:

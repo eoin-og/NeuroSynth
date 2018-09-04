@@ -21,13 +21,13 @@ if __name__ == "__main__":
 						help='sustain levels')
 	parser.add_argument('--attacks', type=list, default=[0.0, 0.2, 0.4], metavar='N', 
 						help='attack levels (amount of sample that should be rising)')
-	parser.add_argument('--decays', type=list, default=[0.0, 0.2, 0.4], metavar='N', 
-						help='decay levels (amount of sample that should be falling)')
+	parser.add_argument('--releases', type=list, default=[0.0, 0.2, 0.4], metavar='N', 
+						help='release levels (amount of sample that should be falling)')
 	args = parser.parse_args()
 
 	attacks = [int(a*args.seq_length) + 1 for a in args.attacks]
-	decays = [int(a*args.seq_length) + 1 for a in args.decays]
-	variables = [args.sustains, attacks, decays]
+	releases = [int(a*args.seq_length) + 1 for a in args.releases]
+	variables = [args.sustains, attacks, releases]
 	
 	gan.train(num_epoch=args.num_epoch,
 			  dsize=args.dsize,
