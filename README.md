@@ -1,14 +1,14 @@
 # NeuroSynth
-Simple synthesizer based on a neural network. Network uses adversarial training to learn attack/sustain/decay transformation which can be applied to an input waveform. 
+Simple synthesizer based on a neural network. Network is adversarially trained to learn attack/sustain/release transformations which can be applied to an input waveform. 
 
 ## Overview
 Our generator is trained adversarially using the wgan-gp algorithm. Our discriminator(or critic) network takes as input the original waveform, the transformed waveform, as well as the timestamp coordinates (a list of integers 0-length of sequence). Both networks are fully convolutional, with a couple of ResNet blocks in the generator network.
 
 The inclusion of the original waveform means that the discriminator will learn the transformation between the two waveforms (instead of just learning whether a sample is real or not). This discourages the generator from just learning off a couple of realistic outputs and disregarding it's input. 
 
-The inclusion of the timestamp helps the network learn temporal features (attack and decay). This idea was inspired by [this blog post](https://eng.uber.com/coordconv/).
+The inclusion of the timestamp helps the network learn temporal features (attack and release). This idea was inspired by [this blog post](https://eng.uber.com/coordconv/).
 
-The discriminator has two output layers, one for whether it believes the source of the input was real or generated, and one for what class it believes the input belongs to. The class output layer allows us to learn to generate conditional examples. The loss function for the discriminator is the source loss on real examples, the class loss on real examples, the source loss on fake examples, and the gradient penalty loss.
+The discriminator has two output layers, one for whether it believes the source of the input was real or generated, and one for what class it believes the input belongs to. The class output layer allows us to learn to generate class conditional examples. The loss function for the discriminator is the source loss on real examples, the class loss on real examples, the source loss on fake examples, and the gradient penalty loss.
 
 Our Generator takes the original waveform, timestamp coordinates, and desired class outputs as input and produces transformed waveforms as output. The loss function for the generator is the source loss and class of the discriminator.
 
