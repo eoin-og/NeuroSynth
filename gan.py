@@ -14,13 +14,13 @@ import utils
 np.set_printoptions(precision=3)
 
 
-def train(num_epoch=500, dsize=2048, batch_size=64, seq_length=128, cf=8, print_interval=10, variables=None):
+def train(num_epoch=500, dsize=2048, batch_size=64, seq_length=128, conv_dim=8, print_interval=10, variables=None):
 
 	num_dim = sum(len(v) for v in variables)
 	sustains, attacks, releases = variables
 
-	G = models.Generator(num_dim, cf)
-	D = models.Discriminator(num_dim, seq_length, cf)
+	G = models.Generator(num_dim, conv_dim)
+	D = models.Discriminator(num_dim, seq_length, conv_dim)
 
 	D_optimizer = torch.optim.Adam(D.parameters())
 	G_optimizer = torch.optim.Adam(G.parameters())
